@@ -1,0 +1,68 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String   @id @default(cuid())
+  name         String
+  email        String   @unique
+  refreshToken String?
+  avatar       String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  quiz   Quiz?   @relation(fields: [quizId], references: [id])
+  quizId String?
+
+  @@index([email])
+  @@index([id])
+}
+
+model Quiz {
+  id           String         @id @default(cuid())
+  name        String
+  description  String?
+  questions    Question[]
+  responses    UserResponse[]
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+  AbandonEvent AbandonEvent[]
+  user         User[]
+}
+
+model Question {
+  id        String   @id @default(cuid())
+  text      String
+  options   String[]
+  correct   String
+  quizId    String
+  quiz      Quiz     @relation(fields: [quizId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model UserResponse {
+  id        String   @id @default(cuid())
+  userId    String
+  quizId    String
+  quiz      Quiz     @relation(fields: [quizId], references: [id], onDelete: Cascade)
+  answers   Json
+  name      String
+  email     String
+  abandoned Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model AbandonEvent {
+  id        String   @id @default(cuid())
+  userId    String
+  quizId    String
+  quiz      Quiz     @relation(fields: [quizId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+}
