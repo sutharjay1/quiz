@@ -12,6 +12,7 @@ import {
   ArrowRight,
   Calendar,
   FolderGit2,
+  FormInput,
   Loader2,
   PlusCircle,
 } from "lucide-react";
@@ -94,6 +95,22 @@ const AllQuiz = () => {
                   </h3>
 
                   <div className="flex items-center gap-2">
+                    <Button
+                      variant="outline"
+                      className="rounded-xl px-2 py-1.5"
+                      asChild
+                    >
+                      <Link
+                        to={`/quiz/${quiz.id}/responses`}
+                        className="cursor-pointer"
+                      >
+                        <FormInput
+                          className="h-7 w-7 font-bold"
+                          strokeWidth={1.08}
+                        />
+                        <span className="sr-only">Settings</span>
+                      </Link>
+                    </Button>
                     <Button
                       variant="outline"
                       className="rounded-xl px-2 py-1.5"

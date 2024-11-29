@@ -116,6 +116,23 @@ export class QuestionController {
     }
   }
 
+  async getByIdWithoutAnswers(req: Request, res: Response): Promise<void> {
+    const { id } = req.params;
+
+    try {
+      const question: Omit<Question, "correct" | "createdAt" | "updatedAt">[] =
+        await this.questionService.getQuestionsByQuizIdWithoutAnswers(id);
+
+      if (question) {
+        res.json(question);
+      } else {
+        res.status(404).json({ message: "Question not found" });
+      }
+    } catch (error) {
+      res.status(500).json({ message: "Error fetching question", error });
+    }
+  }
+
   async delete(req: Request, res: Response): Promise<void> {
     const { id } = req.params;
 

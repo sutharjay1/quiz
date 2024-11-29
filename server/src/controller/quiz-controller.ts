@@ -95,6 +95,36 @@ export class QuizController {
       res.status(500).json({ message: "Error fetching responses", error });
     }
   }
+
+  async getQuizResponses(req: Request, res: Response): Promise<void> {
+    const { id } = req.params;
+    try {
+      const responses = await this.quizService.getQuizResponses(id);
+      res.json(responses);
+    } catch (error) {
+      res.status(500).json({ message: "Error fetching responses", error });
+    }
+  }
+
+  async abandon(req: Request, res: Response): Promise<void> {
+    const { quizId, email, userId } = req.body;
+    try {
+      await this.quizService.abandonQuiz(quizId, email, userId);
+      res.status(204).send();
+    } catch (error) {
+      res.status(500).json({ message: "Error abandoning quiz", error });
+    }
+  }
+
+  async getAbandonInfo(req: Request, res: Response): Promise<void> {
+    const { quizId } = req.params;
+    try {
+      const abandonInfo = await this.quizService.getAbandonInfo(quizId);
+      res.json(abandonInfo);
+    } catch (error) {
+      res.status(500).json({ message: "Error fetching abandon info", error });
+    }
+  }
 }
 
 export default new QuizController();

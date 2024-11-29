@@ -33,7 +33,7 @@ const getQuizQuestions = async (quizId: string) => {
   return response.data;
 };
 
-const getQuizInfo = async (quizId: string) => {
+export const getQuizInfo = async (quizId: string) => {
   const response = await axios.get(
     `${import.meta.env.VITE_SERVER_URL}/api/quiz/${quizId}`,
     { withCredentials: true },

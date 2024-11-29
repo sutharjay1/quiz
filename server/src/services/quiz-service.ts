@@ -80,6 +80,14 @@ export class QuizService {
     return deleted.count > 0;
   }
 
+  async getQuizResponses(quizId: string): Promise<UserResponse[]> {
+    return db.userResponse.findMany({
+      where: {
+        quizId,
+      },
+    });
+  }
+
   async getResponses(
     quizId: string,
     responseId: string,
@@ -115,13 +123,54 @@ export class QuizService {
     });
   }
 
-  async logAbandonEvent(userId: string, quizId: string): Promise<boolean> {
-    const abandonEvent = await db.abandonEvent.create({
-      data: {
-        userId,
+  async abandonQuiz(
+    quizId: string,
+    email: string,
+    userId: string,
+  ): Promise<boolean> {
+    try {
+      const alreadyExists = await db.abandonEvent.findFirst({
+        where: {
+          quizId,
+          email,
+        },
+      });
+
+      if (alreadyExists) {
+        await db.abandonEvent.update({
+          where: {
+            id: alreadyExists.id,
+          },
+          data: {
+            count: alreadyExists.count + 1,
+          },
+        });
+
+        return true;
+      }
+
+      const abandonEvent = await db.abandonEvent.create({
+        data: {
+          quizId,
+          email,
+          count: 1,
+          userId: userId || "",
+        },
+      });
+
+      return !!abandonEvent;
+    } catch (error) {
+      console.error("Error in abandonQuiz:", error);
+      return false;
+    }
+  }
+
+  async getAbandonInfo(quizId: string): Promise<any> {
+    const abandonEvents = await db.abandonEvent.findMany({
+      where: {
         quizId,
       },
     });
-    return !!abandonEvent;
+    return abandonEvents;
   }
 }

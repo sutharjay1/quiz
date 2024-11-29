@@ -163,6 +163,40 @@ export class QuizQuestionService {
     }
   }
 
+  async getQuestionsByQuizIdWithoutAnswers(
+    quizId: string,
+  ): Promise<Omit<Question, "correct" | "createdAt" | "updatedAt">[]> {
+    try {
+      if (!quizId) {
+        throw new Error("Quiz ID is required.");
+      }
+
+      const questions = await db.question.findMany({
+        where: {
+          quizId: quizId,
+        },
+        select: {
+          id: true,
+          text: true,
+          options: true,
+          quizId: true,
+        },
+      });
+
+      if (questions.length === 0) {
+        throw new Error(`No questions found for quiz ID "${quizId}".`);
+      }
+
+      return questions;
+    } catch (error) {
+      console.error(
+        `Error fetching questions for quiz ID "${quizId}":`,
+        error instanceof Error ? error.message : String(error),
+      );
+      throw new Error("Could not fetch the questions. Please try again.");
+    }
+  }
+
   async deleteQuestion(questionId: string): Promise<boolean> {
     try {
       const deleted = await db.question.delete({

@@ -50,11 +50,12 @@ model UserResponse {
   id String @id @default(cuid())
 
   quizId    String
-  quiz      Quiz     @relation(fields: [quizId], references: [id], onDelete: Cascade)
+  quiz      Quiz    @relation(fields: [quizId], references: [id], onDelete: Cascade)
   results   Json
   name      String
-  email     String   @unique
-  abandoned Boolean  @default(false)
+  email     String  @unique
+  abandoned Boolean @default(false)
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
@@ -62,6 +63,8 @@ model UserResponse {
 model AbandonEvent {
   id        String   @id @default(cuid())
   userId    String
+  email     String
+  count     Int      @default(0)
   quizId    String
   quiz      Quiz     @relation(fields: [quizId], references: [id], onDelete: Cascade)
   createdAt DateTime @default(now())
