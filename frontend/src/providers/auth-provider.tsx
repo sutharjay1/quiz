@@ -37,7 +37,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     localStorage.setItem("user", JSON.stringify(data));
   };
 
-  const logout = () => { 
+  const logout = () => {
     setUser(null);
     localStorage.removeItem("user");
     removeCookie("isLoggedIn", "false", { path: "/" });

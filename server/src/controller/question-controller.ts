@@ -1,6 +1,7 @@
 import type { Request, Response } from "express";
 import type { Question } from "@prisma/client";
 import { QuizQuestionService } from "../services/question-service";
+import { db } from "../db";
 
 export class QuestionController {
   private questionService: QuizQuestionService;
@@ -63,15 +64,31 @@ export class QuestionController {
   }
 
   async check(req: Request, res: Response): Promise<void> {
-    const { quizId, questionIds, answers } = req.body;
+    const { quizId, questionIds, answers, userId, name, email } = req.body;
 
     try {
-      const isCorrect = await this.questionService.checkAnswer({
+      const existingResponse = await db.userResponse.findFirst({
+        where: {
+          quizId,
+          email,
+        },
+      });
+
+      if (existingResponse) {
+        res.status(403).json({
+          message: "You have already submitted this quiz",
+        });
+        return;
+      }
+
+      const data = await this.questionService.checkAnswer({
         quizId,
         questionIds,
         answers,
+        name,
+        email,
       });
-      res.json({ isCorrect });
+      res.json({ data });
     } catch (error) {
       res.status(400).json({ message: "Error checking answer", error });
     }

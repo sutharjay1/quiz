@@ -1,4 +1,4 @@
-import type { Quiz, Question } from "@prisma/client";
+import type { Quiz, Question, UserResponse } from "@prisma/client";
 import { db } from "../db";
 
 export class QuizQuestionService {
@@ -86,11 +86,15 @@ export class QuizQuestionService {
     quizId,
     questionIds,
     answers,
+    email,
+    name,
   }: {
     quizId: string;
     questionIds: string[];
     answers: string[];
-  }): Promise<boolean[]> {
+    email: string;
+    name: string;
+  }): Promise<UserResponse> {
     try {
       if (!quizId) {
         throw new Error("Quiz ID is required");
@@ -132,7 +136,19 @@ export class QuizQuestionService {
         }),
       );
 
-      return results;
+      const userResponse = await db.userResponse.create({
+        data: {
+          quizId,
+          results: answers.map((answer, index) => {
+            return { [answer]: results[index] };
+          }),
+          name: name,
+          email: email,
+          abandoned: false,
+        },
+      });
+
+      return userResponse;
     } catch (error) {
       console.error(
         `Error checking answers for quiz with ID ${quizId}:`,

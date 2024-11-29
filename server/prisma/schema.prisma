@@ -25,7 +25,7 @@ model User {
 
 model Quiz {
   id           String         @id @default(cuid())
-  name        String
+  name         String
   description  String?
   questions    Question[]
   responses    UserResponse[]
@@ -47,13 +47,13 @@ model Question {
 }
 
 model UserResponse {
-  id        String   @id @default(cuid())
-  userId    String
+  id String @id @default(cuid())
+
   quizId    String
   quiz      Quiz     @relation(fields: [quizId], references: [id], onDelete: Cascade)
-  answers   Json
+  results   Json
   name      String
-  email     String
+  email     String   @unique
   abandoned Boolean  @default(false)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

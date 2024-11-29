@@ -6,7 +6,12 @@ const quizController = new QuizController();
 
 router.post("/create", quizController.create.bind(quizController));
 
-router.get("/quiz/:id", quizController.getById.bind(quizController));
+router.get("/:id", quizController.getById.bind(quizController));
+
+router.get(
+  "/responses/:id/:responseId",
+  quizController.getResponses.bind(quizController),
+);
 
 router.post("/", quizController.getAll.bind(quizController));
 

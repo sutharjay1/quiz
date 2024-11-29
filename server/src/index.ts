@@ -74,10 +74,6 @@ passport.use(
           return done(null, existingUser);
         }
 
-        console.log({
-          profile,
-        });
-
         const newUser = await db.user.create({
           data: {
             email: profile.emails![0].value,

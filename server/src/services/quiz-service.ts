@@ -80,6 +80,33 @@ export class QuizService {
     return deleted.count > 0;
   }
 
+  async getResponses(
+    quizId: string,
+    responseId: string,
+  ): Promise<UserResponse | { totalCorrectAnswers: number }> {
+    const result = await db.userResponse.findMany({
+      where: {
+        id: responseId,
+        quizId,
+      },
+    });
+
+    if (result.length === 0) {
+      throw new Error("No response found for the given responseId");
+    }
+
+    const results: any = result[0]?.results ?? [];
+
+    const totalCorrectAnswers = results?.filter(
+      (item: any) => item.correct === true,
+    ).length;
+
+    return {
+      ...result[0],
+      totalCorrectAnswers,
+    };
+  }
+
   async getQuizQuestions(quizId: string): Promise<Question[]> {
     return db.question.findMany({
       where: {

@@ -85,6 +85,16 @@ export class QuizController {
       res.status(500).json({ message: "Error deleting quiz", error });
     }
   }
+
+  async getResponses(req: Request, res: Response): Promise<void> {
+    const { id, responseId } = req.params;
+    try {
+      const responses = await this.quizService.getResponses(id, responseId);
+      res.json(responses);
+    } catch (error) {
+      res.status(500).json({ message: "Error fetching responses", error });
+    }
+  }
 }
 
 export default new QuizController();
