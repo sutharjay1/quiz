@@ -6,6 +6,10 @@ const questionController = new QuestionController();
 
 router.get("/:quizId", questionController.getAll.bind(questionController));
 router.get("/:id", questionController.getById.bind(questionController));
+router.get(
+  "/quiz/:id",
+  questionController.getByIdWithoutAnswers.bind(questionController),
+);
 router.post("/create", questionController.create.bind(questionController));
 router.post("/check", questionController.check.bind(questionController));
 

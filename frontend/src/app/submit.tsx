@@ -1,20 +1,33 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { errorToast, successToast } from "@/features/global/toast";
+import { useUser } from "@/hooks/use-user";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import axios from "axios";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate, useParams, useSearchParams } from "react-router";
 import { z } from "zod";
 
 const getQuizQuestions = async (quizId: string) => {
   const response = await axios.get(
-    `${import.meta.env.VITE_SERVER_URL}/api/quiz/questions/${quizId}`,
+    `${import.meta.env.VITE_SERVER_URL}/api/quiz/questions/quiz/${quizId}`,
     { withCredentials: true },
   );
   return response.data;
+};
+
+const logAbandonment = async (
+  quizId: string,
+  email: string,
+  userId: string,
+) => {
+  await axios.post(
+    `${import.meta.env.VITE_SERVER_URL}/api/quiz/abandon`,
+    { quizId, email, userId },
+    { withCredentials: true },
+  );
 };
 
 const submitQuizAnswers = async (
@@ -51,7 +64,8 @@ const Submit = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showQuiz, setShowQuiz] = useState(false);
 
-  // Get current question index from URL, default to 0 if not present
+  const { user } = useUser();
+
   const currentQuestionIndex = parseInt(searchParams.get("q") || "0");
 
   const form = useForm({
@@ -93,7 +107,7 @@ const Submit = () => {
       successToast("Your answers have been submitted!", {
         position: "top-center",
       });
-      navigate(`/submit/${quizId}/${data.data.id}`);
+      window.location.href = `/submit/${quizId}/${data.data.id}`;
     },
     onError: (error: Error) => {
       if (axios.isAxiosError(error)) {
@@ -109,6 +123,59 @@ const Submit = () => {
     },
   });
 
+  const hasStartedQuiz = useRef(false);
+
+  useEffect(() => {
+    const handleAbandon = (event: BeforeUnloadEvent) => {
+      if (!isSubmitting && quizId && showQuiz && hasStartedQuiz.current) {
+        event.preventDefault();
+        event.returnValue = "";
+
+        try {
+          logAbandonment(quizId, form.getValues("email"), user?.id.toString()!)
+            .then(() => {
+              errorToast("You have abandoned the quiz", {
+                position: "top-center",
+              });
+            })
+            .catch((err) => {
+              console.error("Failed to log abandonment:", err);
+            });
+        } catch (error) {
+          console.error("Failed to log abandonment:", error);
+        }
+      }
+    };
+
+    const handleVisibilityChange = () => {
+      if (
+        document.visibilityState === "hidden" &&
+        !isSubmitting &&
+        quizId &&
+        showQuiz &&
+        hasStartedQuiz.current
+      ) {
+        logAbandonment(quizId, form.getValues("email"), user?.id.toString()!)
+          .then(() =>
+            errorToast("You have abandoned the quiz", {
+              position: "top-center",
+            }),
+          )
+          .catch((err) => {
+            console.error("Failed to log abandonment:", err);
+          });
+      }
+    };
+
+    window.addEventListener("beforeunload", handleAbandon);
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+
+    return () => {
+      window.removeEventListener("beforeunload", handleAbandon);
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+    };
+  }, [isSubmitting, quizId, showQuiz, user?.id]);
+
   const handleAnswerChange = (questionId: string, value: string) => {
     setAnswers((prevAnswers) => ({
       ...prevAnswers,
@@ -118,6 +185,7 @@ const Submit = () => {
 
   const handleFormSubmit = (data: { name: string; email: string }) => {
     setShowQuiz(true);
+    hasStartedQuiz.current = true;
     navigate(`/submit/${quizId}?q=0`);
   };
 

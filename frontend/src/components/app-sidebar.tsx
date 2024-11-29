@@ -35,26 +35,6 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const data = {
     navMain: [
       {
-        title: "Dashboard",
-        url: "/dashboard",
-        icon: SquareTerminal,
-        isActive: true,
-        items: [
-          {
-            title: "Overview",
-            url: "/dashboard/overview",
-          },
-          {
-            title: "Analytics",
-            url: "/dashboard/analytics",
-          },
-          {
-            title: "Reports",
-            url: "/dashboard/reports",
-          },
-        ],
-      },
-      {
         title: "Quiz",
         url: "#",
         icon: Frame,
@@ -69,8 +49,8 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
             url: `/quizzes/new`,
           },
           {
-            title: "Archived Quiz",
-            url: "/quiz/archived",
+            title: "Quiz Results",
+            url: `/quiz/${quiz?.id}/responses`,
           },
           {
             title: "Settings",

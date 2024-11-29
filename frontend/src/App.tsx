@@ -6,6 +6,7 @@ import { Layout } from "./features/global/layout";
 import Loading from "./features/global/loading";
 import { useUser } from "./hooks/use-user";
 import Result from "./app/result";
+import QuizResponse from "./app/quiz-response";
 
 const Submit = lazy(() => import("./app/submit"));
 const Home = lazy(() => import("./app/home"));
@@ -74,6 +75,7 @@ const AppRouter = () => (
       <Route path="/quiz/:quizId" element={<DynamicQuizForm />} />
       <Route path="/quizzes" element={<AllQuiz />} />
       <Route path="/quiz/:quizId/settings" element={<DeleteQuiz />} />
+      <Route path="/quiz/:quizId/responses" element={<QuizResponse />} />
     </Route>
   </Routes>
 );
