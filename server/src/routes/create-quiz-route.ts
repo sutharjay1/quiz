@@ -1,4 +1,4 @@
-import { QuizController } from "@controllers/quiz-controller.ts";
+import { QuizController } from "@controllers/quiz-controller";
 import { Router } from "express";
 
 const router = Router();
