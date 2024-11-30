@@ -17,38 +17,39 @@ const PORT: number = 3000;
 app.use(express.json());
 
 app.use(
-	cors({
-		origin: [
-			'https://quiz-sutharjay.vercel.app',
-			'http://localhost:5173',
-			'https://quiz-hwxi.onrender.com',
-		],
-		credentials: true,
-		methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-		allowedHeaders: [
-			'Content-Type',
-			'Authorization',
-			'Cookie',
-			'Set-Cookie',
-		],
-	})
+    cors({
+        origin: [
+            'https://quiz-sutharjay.vercel.app',
+            'http://localhost:5173',
+            'https://quiz-hwxi.onrender.com',
+        ],
+        credentials: true,
+        methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+        allowedHeaders: [
+            'Content-Type', 
+            'Authorization', 
+            'Cookie', 
+            'Set-Cookie',
+        ],
+    })
 );
+
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
 app.use(
-	session({
-		secret: process.env.SESSION_SECRET!,
-		resave: false,
-		saveUninitialized: false,
-		cookie: {
-			secure: process.env.NODE_ENV === 'production',
-			sameSite: 'none',
-			httpOnly: true,
-			maxAge: 24 * 60 * 60 * 1000,
-		},
-		proxy: true,
-	})
+    session({
+        secret: process.env.SESSION_SECRET!,
+        resave: false,
+        saveUninitialized: false,
+        cookie: {
+            secure: true, 
+            sameSite: 'none',  
+            httpOnly: true,
+            maxAge: 24 * 60 * 60 * 1000,
+        },
+        proxy: true,
+    })
 );
 
 app.use(passport.initialize());
