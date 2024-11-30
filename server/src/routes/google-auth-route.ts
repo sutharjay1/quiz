@@ -30,10 +30,10 @@ router.get(
 router.get('/profile', (req, res) => {
 	console.log(`Checking /profile`);
 
+  console.log({
+    user: req.user,
+  });
 	if (req.isAuthenticated()) {
-		console.log({
-			user: req.user,
-		});
 		res.json({
 			user: req.user,
 		});
