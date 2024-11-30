@@ -1,5 +1,5 @@
+import { db } from "@db/index.ts";
 import type { Quiz, Question, UserResponse } from "@prisma/client";
-import { db } from "../db";
 
 export class QuizService {
   async getAllQuizzes(userId: string): Promise<Quiz[]> {

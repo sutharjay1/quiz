@@ -1,15 +1,15 @@
+import { db } from "@db/index.ts";
+import { quizRouter } from "@routes/create-quiz-route.ts";
+import { authRouter } from "@routes/google-auth-route.ts";
+import { questionRouter } from "@routes/question-route.ts";
+import type { MessageResponse } from "@types/message-response.ts";
 import cors from "cors";
 import "dotenv/config";
 import express from "express";
 import session from "express-session";
 import passport from "passport";
 import { Strategy as GoogleStrategy } from "passport-google-oauth20";
-import { db } from "./db";
-import { errorHandler, notFound } from "./middleware";
-import { quizRouter } from "./routes/create-quiz-route";
-import { authRouter } from "./routes/google-auth-route";
-import type { MessageResponse } from "./types/message-response";
-import { questionRouter } from "./routes/question-route";
+import { errorHandler, notFound } from "./middleware.ts";
 
 const app = express();
 const PORT: number = 3000;

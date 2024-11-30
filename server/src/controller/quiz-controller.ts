@@ -1,6 +1,6 @@
 import type { Request, Response } from "express";
-import { QuizService } from "../services/quiz-service";
 import type { Quiz } from "@prisma/client";
+import { QuizService } from "@services/quiz-service.ts";
 
 export class QuizController {
   private quizService: QuizService;
@@ -92,7 +92,10 @@ export class QuizController {
       const responses = await this.quizService.getResponses(id, responseId);
       res.json(responses);
     } catch (error) {
-      res.status(500).json({ message: "Error fetching responses", error });
+      res.status(500).json({
+        message: "Error fetching responses",
+        error,
+      });
     }
   }
 
@@ -102,7 +105,10 @@ export class QuizController {
       const responses = await this.quizService.getQuizResponses(id);
       res.json(responses);
     } catch (error) {
-      res.status(500).json({ message: "Error fetching responses", error });
+      res.status(500).json({
+        message: "Error fetching responses",
+        error,
+      });
     }
   }
 
@@ -122,7 +128,10 @@ export class QuizController {
       const abandonInfo = await this.quizService.getAbandonInfo(quizId);
       res.json(abandonInfo);
     } catch (error) {
-      res.status(500).json({ message: "Error fetching abandon info", error });
+      res.status(500).json({
+        message: "Error fetching abandon info",
+        error,
+      });
     }
   }
 }
