@@ -13,21 +13,19 @@ import type { MessageResponse } from './types/message-response';
 
 const app = express();
 const PORT: number = 3000;
+
+app.use(express.json());
+
 app.use(
 	cors({
 		origin: 'https://quiz-sutharjay.vercel.app',
 		credentials: true,
-		methods: ['GET', 'POST', 'OPTIONS', 'PUT', 'DELETE'],
+		methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+		allowedHeaders: ['Content-Type', 'Authorization'],
 	})
 );
 
 app.use(express.json());
-app.get<{}, MessageResponse>('/', (_, res) => {
-	res.json({
-		message: '🦄🌈✨👋🌎🌍🌏✨🌈🦄',
-	});
-});
-
 app.use(
 	session({
 		secret: process.env.SESSION_SECRET!,
@@ -35,7 +33,7 @@ app.use(
 		saveUninitialized: false,
 		cookie: {
 			secure: process.env.NODE_ENV === 'production',
-			maxAge: 24 * 60 * 60 * 1000, // 24 hours
+			maxAge: 24 * 60 * 60 * 1000,
 		},
 	})
 );
@@ -102,6 +100,12 @@ passport.use(
 		}
 	)
 );
+
+app.get<{}, MessageResponse>('/', (_, res) => {
+	res.json({
+		message: '🦄🌈✨👋🌎🌍🌏✨🌈🦄',
+	});
+});
 
 app.use('/api/auth', authRouter);
 app.use('/api/quiz', quizRouter);
