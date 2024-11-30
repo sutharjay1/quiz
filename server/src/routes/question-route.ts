@@ -1,5 +1,5 @@
+import { QuestionController } from "@controllers/question-controller.ts";
 import express from "express";
-import { QuestionController } from "../controller/question-controller";
 
 const router = express.Router();
 const questionController = new QuestionController();

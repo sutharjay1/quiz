@@ -1,4 +1,4 @@
-import type { MessageResponse } from "./message-response";
+import type { MessageResponse } from "./message-response.ts";
 
 export interface ErrorResponse extends MessageResponse {
   stack?: string;

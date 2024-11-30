@@ -1,6 +1,6 @@
+import { db } from "@db/index.ts";
 import { Router } from "express";
 import passport from "passport";
-import { db } from "../db";
 
 const router = Router();
 

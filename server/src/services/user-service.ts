@@ -1,27 +1,27 @@
-import type { UserResponse } from '@prisma/client';
-import { db } from '../db';
+import { db } from "@db/index.ts";
+import type { UserResponse } from "@prisma/client";
 
 export class UserResponseService {
-	async storeUserResponse(
-		quizId: string,
-		name: string,
-		email: string,
-		answers: Record<string, number>
-	): Promise<UserResponse> {
-		return db.userResponse.create({
-			data: {
-				quizId,
-				results: JSON.stringify(answers),
-				name,
-				email,
-			},
-		});
-	}
+  async storeUserResponse(
+    quizId: string,
+    name: string,
+    email: string,
+    answers: Record<string, number>,
+  ): Promise<UserResponse> {
+    return db.userResponse.create({
+      data: {
+        quizId,
+        results: JSON.stringify(answers),
+        name,
+        email,
+      },
+    });
+  }
 
-	async markAbandoned(userResponseId: string): Promise<UserResponse> {
-		return db.userResponse.update({
-			where: { id: userResponseId },
-			data: { abandoned: true },
-		});
-	}
+  async markAbandoned(userResponseId: string): Promise<UserResponse> {
+    return db.userResponse.update({
+      where: { id: userResponseId },
+      data: { abandoned: true },
+    });
+  }
 }

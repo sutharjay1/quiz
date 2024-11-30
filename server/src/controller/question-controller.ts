@@ -1,7 +1,7 @@
 import type { Request, Response } from "express";
 import type { Question } from "@prisma/client";
-import { QuizQuestionService } from "../services/question-service";
-import { db } from "../db";
+import { QuizQuestionService } from "@services/question-service.ts";
+import { db } from "@db/index.ts";
 
 export class QuestionController {
   private questionService: QuizQuestionService;

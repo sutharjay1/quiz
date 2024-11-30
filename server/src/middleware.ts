@@ -1,5 +1,5 @@
+import type { ErrorResponse } from "@lib/response.ts";
 import type { NextFunction, Request, Response } from "express";
-import type { ErrorResponse } from "./types";
 
 export function notFound(req: Request, res: Response, next: NextFunction) {
   res.status(404);
