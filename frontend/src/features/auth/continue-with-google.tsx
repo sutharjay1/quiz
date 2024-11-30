@@ -17,6 +17,7 @@ const ContinueWithGoogle = () => {
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
     const authStatus = urlParams.get("auth");
+    const token = urlParams.get("token");
 
     const checkAuth = async () => {
       try {
@@ -26,6 +27,7 @@ const ContinueWithGoogle = () => {
             withCredentials: true,
             headers: {
               "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
             },
           },
         );
@@ -36,7 +38,7 @@ const ContinueWithGoogle = () => {
             position: "top-center",
           });
           setCookie("isLoggedIn", "true", { path: "/" });
-          setCookie("token", JSON.stringify(response.data), {
+          setCookie("token", token, {
             path: "/",
           });
           navigate("/dashboard");
