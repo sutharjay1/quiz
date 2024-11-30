@@ -22,7 +22,13 @@ const ContinueWithGoogle = () => {
       try {
         const response = await axios.get(
           `${import.meta.env.VITE_SERVER_URL}/api/auth/profile`,
-          { withCredentials: true },
+
+          {
+            withCredentials: true,
+            headers: {
+              "Access-Control-Allow-Origin": "*",
+            },
+          },
         );
 
         if (response.data?.user) {
