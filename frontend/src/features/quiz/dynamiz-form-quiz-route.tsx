@@ -12,18 +12,18 @@ import {
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
+import { useQuiz } from "@/hooks/use-quiz";
 import { useUser } from "@/hooks/use-user";
 import { Question } from "@/types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import axios from "axios";
-import { Check, Plus, Trash2 } from "lucide-react";
+import { Check, Edit, Plus, Trash2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Controller, useFieldArray, useForm } from "react-hook-form";
 import { useParams } from "react-router";
 import { z } from "zod";
 import { errorToast, successToast } from "../global/toast";
-import { useQuiz } from "@/hooks/use-quiz";
 
 const getQuizQuestions = async (quizId: string) => {
   const response = await axios.get(
@@ -86,6 +86,9 @@ export default function DynamicQuizForm() {
   const { user } = useUser();
   const { setQuiz } = useQuiz();
   const [correctOption, setCorrectOption] = useState<number>(0);
+  const [editingQuestionId, setEditingQuestionId] = useState<string | null>(
+    null,
+  );
 
   useEffect(() => {
     if (quizId) {
@@ -121,20 +124,31 @@ export default function DynamicQuizForm() {
     name: "options",
   });
 
-  const createQuestionMutation = useMutation({
+  const createOrUpdateQuestionMutation = useMutation({
     mutationFn: async (data: QuizQuestionSchemaType) => {
       if (!quizId || !user?.id) {
         throw new Error("Quiz ID or User not found");
       }
 
+      if (editingQuestionId) {
+        return axios.put(
+          `${import.meta.env.VITE_SERVER_URL}/api/quiz/questions/${editingQuestionId}`,
+          { ...data, userId: user.id },
+          { withCredentials: true },
+        );
+      }
+
       return createQuizQuestion({ ...data, userId: user.id });
     },
     onSuccess: () => {
-      successToast("Question Added", {
+      successToast(editingQuestionId ? "Question Updated" : "Question Added", {
         position: "top-center",
       });
 
+      setEditingQuestionId(null);
       setCorrectOption(0);
+      form.reset();
+      refetch();
     },
     onError: (error: Error) => {
       errorToast(error.message, {
@@ -166,7 +180,9 @@ export default function DynamicQuizForm() {
     };
 
     try {
-      await createQuestionMutation.mutateAsync(formData).then(() => refetch());
+      await createOrUpdateQuestionMutation
+        .mutateAsync(formData)
+        .then(() => refetch());
     } catch (error) {
       console.error("Form submission error:", error);
     }
@@ -177,9 +193,22 @@ export default function DynamicQuizForm() {
     form.setValue("correct", form.getValues().options[index]);
   };
 
+  const handleEdit = (question: Question) => {
+    form.reset({
+      quizId,
+      text: question.text,
+      options: question.options,
+      correct: question.correct.toString(),
+    });
+    setCorrectOption(
+      question.options.findIndex((option) => option === question.correct),
+    );
+    setEditingQuestionId(question.id);
+  };
+
   return (
     <div className="mx-auto flex w-full flex-1 flex-col space-y-4 md:flex-row md:p-6">
-      <h1 className="mb-8 text-center text-3xl font-bold">Question Manager</h1>
+      <h1 className="mb-4 text-center text-3xl font-bold">Question Manager</h1>
       <div className="grid gap-8 md:grid-cols-2">
         <Card className="w-full">
           <CardHeader className="pt-6">
@@ -284,7 +313,7 @@ export default function DynamicQuizForm() {
                 )}
 
                 <Button type="submit" className="mt-2 w-full">
-                  Add Question
+                  {editingQuestionId ? "Update Question" : "Add Question"}
                 </Button>
               </form>
             </Form>
@@ -306,16 +335,26 @@ export default function DynamicQuizForm() {
                           <h3 className="text-lg font-semibold">
                             {`${questionIndex + 1}. ${question.text}`}
                           </h3>
-                          <Button
-                            variant="destructive"
-                            size="icon"
-                            onClick={() =>
-                              deleteQuestionMutation.mutate(question.id)
-                            }
-                          >
-                            <Trash2 className="h-4 w-4" />
-                            <span className="sr-only">Delete question</span>
-                          </Button>
+                          <div className="flex items-center space-x-2">
+                            <Button
+                              variant="secondary"
+                              size="icon"
+                              onClick={() => handleEdit(question)}
+                            >
+                              <Edit className="h-4 w-4" />
+                              <span className="sr-only">Edit question</span>
+                            </Button>
+                            <Button
+                              variant="destructive"
+                              size="icon"
+                              onClick={() =>
+                                deleteQuestionMutation.mutate(question.id)
+                              }
+                            >
+                              <Trash2 className="h-4 w-4" />
+                              <span className="sr-only">Delete question</span>
+                            </Button>
+                          </div>
                         </div>
                         <div className="space-y-2">
                           {question.options.map((option, optionIndex) => (
