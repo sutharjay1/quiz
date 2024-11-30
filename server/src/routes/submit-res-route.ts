@@ -1,4 +1,3 @@
- 
 import { UserResponseController } from "@controllers/user-controller";
 import { Router } from "express";
 

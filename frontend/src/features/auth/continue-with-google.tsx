@@ -11,7 +11,7 @@ import { useCookies } from "react-cookie";
 
 const ContinueWithGoogle = () => {
   const navigate = useNavigate();
-  const {   setUser } = useUser();
+  const { setUser } = useUser();
   const [_, setCookie] = useCookies(["token", "isLoggedIn"]);
 
   useEffect(() => {

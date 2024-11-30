@@ -1,7 +1,4 @@
-import {
-  Command,
-  Frame
-} from "lucide-react";
+import { Command, Frame } from "lucide-react";
 import * as React from "react";
 
 import { NavMain } from "@/components/nav-main";
