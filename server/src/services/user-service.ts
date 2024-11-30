@@ -1,4 +1,4 @@
-import { db } from "@db/index.ts";
+import { db } from "@db/index";
 import type { UserResponse } from "@prisma/client";
 
 export class UserResponseService {

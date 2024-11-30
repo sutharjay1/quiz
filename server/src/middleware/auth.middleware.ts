@@ -1,7 +1,6 @@
-import type { JwtPayload } from "jsonwebtoken";
+import { verifyToken } from "@lib/utils";
 import type { NextFunction, Request, Response } from "express";
-import type { User } from "@prisma/client";
-import { verifyToken } from "@lib/utils.ts";
+import type { JwtPayload } from "jsonwebtoken";
 
 declare global {
   namespace Express {
