@@ -13,17 +13,13 @@ import type { MessageResponse } from './types/message-response';
 
 const app = express();
 const PORT: number = 3000;
-
-const whitelist = ['https://quiz-sutharjay.vercel.app'];
-const corsOptions = {
-	origin: function (origin: any, callback: any) {
-		if (whitelist.indexOf(origin) !== -1) {
-			callback(null, true);
-		} else {
-			callback(new Error('Not allowed by CORS'));
-		}
-	},
-};
+app.use(
+	cors({
+		origin: 'https://quiz-sutharjay.vercel.app',
+		credentials: true,
+		methods: ['GET', 'POST', 'OPTIONS', 'PUT', 'DELETE'],
+	})
+);
 
 app.use(express.json());
 app.get<{}, MessageResponse>('/', (_, res) => {
@@ -108,8 +104,8 @@ passport.use(
 );
 
 app.use('/api/auth', authRouter);
-app.use('/api/quiz', cors(corsOptions), quizRouter);
-app.use('/api/quiz/questions', cors(corsOptions), questionRouter);
+app.use('/api/quiz', quizRouter);
+app.use('/api/quiz/questions', questionRouter);
 
 app.use(notFound);
 app.use(errorHandler);
