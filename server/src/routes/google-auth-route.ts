@@ -1,4 +1,4 @@
-import { Router } from 'express';
+import { NextFunction, Request, Response, Router } from 'express';
 import passport from 'passport';
 
 const router = Router();
@@ -47,28 +47,17 @@ router.get(
 	}
 );
 
-router.get('/profile', (req, res) => {
-	console.log('Profile Request Details:', {
-		user: req.user,
-		isAuthenticated: req.isAuthenticated(),
-		sessionID: req.sessionID,
-		session: req.session,
-	});
-
-	res.header('Access-Control-Allow-Origin', process.env.CLIENT_URL);
-	res.header('Access-Control-Allow-Credentials', 'true');
-
+router.get('/profile', ((req: Request, res: Response) => {
 	if (req.isAuthenticated()) {
-		res.json({
+		return res.json({
 			user: req.user,
 			authenticated: true,
 		});
-	} else {
-		res.status(401).json({
-			message: 'Not authenticated',
-			authenticated: false,
-		});
 	}
-});
+
+	res.status(401).json({
+		message: 'Not authenticated',
+	});
+}) as (req: Request, res: Response, next: NextFunction) => void);
 
 export { router as authRouter };
