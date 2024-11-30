@@ -98,10 +98,7 @@ export default function DynamicQuizForm() {
     }
   }, [quizId]);
 
-  const {
-    data: questions, 
-    refetch,
-  } = useQuery({
+  const { data: questions, refetch } = useQuery({
     queryKey: ["questions", quizId],
     queryFn: () => getQuizQuestions(quizId),
     enabled: !!quizId,

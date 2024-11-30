@@ -72,7 +72,7 @@ export default function QuizResult() {
   if (isError) {
     return <ErrorState error={error as Error} />;
   }
-  
+
   const totalQuestions = questions?.length || 0;
 
   const scorePercentage = totalQuestions
