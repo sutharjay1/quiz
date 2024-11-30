@@ -28,7 +28,7 @@ app.use(
     allowedHeaders: ["Content-Type", "Authorization", "Cookie", "Set-Cookie"],
   }),
 );
-
+app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(
   session({
