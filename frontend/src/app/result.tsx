@@ -72,9 +72,8 @@ export default function QuizResult() {
   if (isError) {
     return <ErrorState error={error as Error} />;
   }
+  
   const totalQuestions = questions?.length || 0;
-
-  const questionOption = questions?.map((question) => question.options);
 
   const scorePercentage = totalQuestions
     ? (Number(responses?.totalCorrectAnswers) / totalQuestions) * 100

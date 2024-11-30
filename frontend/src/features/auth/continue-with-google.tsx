@@ -11,8 +11,8 @@ import { useCookies } from "react-cookie";
 
 const ContinueWithGoogle = () => {
   const navigate = useNavigate();
-  const { user, setUser } = useUser();
-  const [cookies, setCookie] = useCookies(["token", "isLoggedIn"]);
+  const {   setUser } = useUser();
+  const [_, setCookie] = useCookies(["token", "isLoggedIn"]);
 
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);

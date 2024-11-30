@@ -15,7 +15,7 @@ const QuizNew = lazy(() => import("./app/quiz"));
 const AllQuiz = lazy(() => import("./features/quiz/all-quiz"));
 const DeleteQuiz = lazy(() => import("./features/quiz/delete-quiz"));
 const DynamicQuizForm = lazy(
-  () => import("./features/quiz/dynamiz-form-quiz-route"),
+  () => import("./features/quiz/dynamic-form-quiz-route"),
 );
 
 const App = () => (
