@@ -27,7 +27,7 @@ router.get(
         sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
         maxAge: 24 * 60 * 60 * 1000,
       });
-      res.redirect(`${process.env.CLIENT_URL}/signin`);
+      res.redirect(`${process.env.CLIENT_URL}/signin?auth=success`);
     } catch (error) {
       console.error("Authentication callback error:", error);
       res.redirect(`${process.env.CLIENT_URL}/signin?auth=failed`);
