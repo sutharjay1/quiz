@@ -183,7 +183,7 @@ const Submit = () => {
     }));
   };
 
-  const handleFormSubmit = (data: { name: string; email: string }) => {
+  const handleFormSubmit = () => {
     setShowQuiz(true);
     hasStartedQuiz.current = true;
     navigate(`/submit/${quizId}?q=0`);

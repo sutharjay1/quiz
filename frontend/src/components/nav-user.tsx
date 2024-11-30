@@ -29,11 +29,11 @@ import { useCookies } from "react-cookie";
 export function NavUser() {
   const { isMobile } = useSidebar();
   const { user } = useUser();
-  const [cookie, setCookie, removeCookie] = useCookies(["token", "isLoggedIn"]);
+  const [, , removeCookie] = useCookies(["token", "isLoggedIn"]);
 
   const handleLogout = () => {
     removeCookie("token", { path: "/" });
-    removeCookie("isLoggedIn", "false", { path: "/" });
+    removeCookie("isLoggedIn", { path: "/" });
     window.location.reload();
     localStorage.clear();
   };
@@ -48,7 +48,7 @@ export function NavUser() {
               className="rounded-xl border border-input bg-background data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
             >
               <Avatar className="h-8 w-8 rounded-xl">
-                <AvatarImage src={user?.avatar} alt={user?.name} />
+                <AvatarImage src={user?.avatar!} alt={user?.name} />
                 <AvatarFallback className="rounded-xl px-3 py-2">
                   {user?.name?.charAt(0)}
                 </AvatarFallback>
@@ -69,7 +69,7 @@ export function NavUser() {
             <DropdownMenuLabel className="p-0 font-normal">
               <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
                 <Avatar className="h-8 w-8 rounded-xl">
-                  <AvatarImage src={user?.avatar} alt={user?.name} />
+                  <AvatarImage src={user?.avatar!} alt={user?.name} />
                   <AvatarFallback className="rounded-xl px-3 py-2">
                     {user?.name?.charAt(0)}
                   </AvatarFallback>

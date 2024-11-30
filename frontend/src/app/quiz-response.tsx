@@ -14,7 +14,7 @@ import { CheckCircle2, XCircle } from "lucide-react";
 import { useParams } from "react-router";
 import { useQuiz } from "@/hooks/use-quiz";
 import { useEffect } from "react";
-import { getQuizInfo } from "@/features/quiz/dynamiz-form-quiz-route";
+import { getQuizInfo } from "@/features/quiz/dynamic-form-quiz-route";
 
 const getQuizQuestions = async (quizId: string): Promise<UserResponse[]> => {
   const response = await axios.get(
@@ -74,7 +74,7 @@ export default function QuizResponse() {
                   <p className="font-semibold">
                     Total Correct Answers: {response.totalCorrectAnswers}
                   </p>
-                  {response.results.map((result, qIndex) => {
+                  {response.results.map((_, qIndex) => {
                     const isCorrect = Object.entries(
                       response?.results[qIndex]!,
                     )[0][1];

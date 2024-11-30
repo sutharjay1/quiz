@@ -99,8 +99,7 @@ export default function DynamicQuizForm() {
   }, [quizId]);
 
   const {
-    data: questions,
-    isLoading,
+    data: questions, 
     refetch,
   } = useQuery({
     queryKey: ["questions", quizId],
