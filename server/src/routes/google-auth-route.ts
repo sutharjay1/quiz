@@ -23,14 +23,23 @@ router.get(
 				);
 			}
 
-			res.cookie('auth', 'success', {
-				httpOnly: true,
-				secure: process.env.NODE_ENV === 'production',
-				sameSite:
-					process.env.NODE_ENV === 'production' ? 'none' : 'lax',
-				maxAge: 24 * 60 * 60 * 1000,
+			req.login(req.user, (err) => {
+				if (err) {
+					console.error('Login error:', err);
+					return res.redirect(
+						`${process.env.CLIENT_URL}/signin?auth=failed`
+					);
+				}
+
+				res.cookie('auth', 'success', {
+					httpOnly: true,
+					secure: true,
+					sameSite: 'none',
+					maxAge: 24 * 60 * 60 * 1000,
+				});
+
+				res.redirect(`${process.env.CLIENT_URL}/signin?auth=success`);
 			});
-			res.redirect(`${process.env.CLIENT_URL}/signin?auth=success`);
 		} catch (error) {
 			console.error('Authentication callback error:', error);
 			res.redirect(`${process.env.CLIENT_URL}/signin?auth=failed`);
@@ -39,8 +48,7 @@ router.get(
 );
 
 router.get('/profile', (req, res) => {
-	console.log(`Checking /profile - Full Request:`);
-	console.log({
+	console.log('Profile Request Details:', {
 		user: req.user,
 		isAuthenticated: req.isAuthenticated(),
 		sessionID: req.sessionID,
