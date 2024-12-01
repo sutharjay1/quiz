@@ -8,7 +8,6 @@ import {
 import { P } from "@/components/ui/typography";
 import ContinueWithGoogle from "@/features/auth/continue-with-google";
 import { cn } from "@/lib/utils";
-import { LuSquare } from "react-icons/lu";
 import { Link } from "react-router";
 
 const SignIn = () => {
@@ -24,10 +23,7 @@ const SignIn = () => {
             to="/"
             className="flex items-center gap-2 text-xl font-semibold"
           >
-            <LuSquare className="h-8 w-8 text-primary" />
-            <span className="text-2xl font-bold tracking-tight text-black">
-              Response
-            </span>
+           QuizMaster
           </Link>
         </CardHeader>
         <CardContent className="mx-auto flex w-full items-center justify-center px-2 pt-4 sm:px-6 sm:pt-6">
