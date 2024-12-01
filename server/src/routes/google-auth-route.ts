@@ -13,23 +13,6 @@ router.get(
   }),
 );
 
-// router.get(
-//   "/google/callback",
-//   passport.authenticate("google", { failureRedirect: "/login" }),
-//   async (req, res) => {
-//     try {
-//       if (!req.user) {
-//         return res.redirect("/login");
-//       }
-
-//       res.redirect(`${process.env.CLIENT_URL}/signin?auth=success`);
-//     } catch (error) {
-//       console.error("Authentication callback error:", error);
-//       res.redirect(`${process.env.CLIENT_URL}/signin?auth=failed`);
-//     }
-//   },
-// );
-
 router.get(
   "/google/callback",
   passport.authenticate("google", { failureRedirect: "/login" }),
@@ -44,7 +27,6 @@ router.get(
         email: (req.user as User).email,
       });
 
-      // Redirect to the client with the token
       res.redirect(
         `${process.env.CLIENT_URL}/signin?auth=success&token=${token}`,
       );
@@ -55,15 +37,6 @@ router.get(
   },
 );
 
-// router.get("/profile", (req, res) => {
-//   if (req.isAuthenticated()) {
-//     res.json({
-//       user: req.user,
-//     });
-//   } else {
-//     res.status(401).json({ message: "Not authenticated" });
-//   }
-// });
 
 router.get("/profile", async (req: any, res: any) => {
   const authHeader = req.headers.authorization;
@@ -71,7 +44,7 @@ router.get("/profile", async (req: any, res: any) => {
     return res.status(401).json({ message: "Not authenticated" });
   }
 
-  const token = authHeader.split(" ")[1]; // Extract the token
+  const token = authHeader.split(" ")[1]; 
   const decoded = verifyToken(token);
 
   if (!decoded) {
