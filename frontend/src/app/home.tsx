@@ -8,7 +8,7 @@ export function Header() {
       <div className="max-w-7xl mx-auto flex justify-between items-center">
         <Link to="/" className="text-2xl font-bold text-primary">QuizMaster</Link>
         <nav>
-          <Link href="/signin" className="text-sm font-medium text-gray-600 hover:text-primary transition-colors">
+          <Link to="/signin" className="text-sm font-medium text-gray-600 hover:text-primary transition-colors">
             Sign In
           </Link>
         </nav>
